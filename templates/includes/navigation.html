@@ -1,0 +1,15 @@
+{% load static %}
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="{% url 'homepage:index' %}">
+      <img src="{% static 'homepage/img/logo.svg' %}" alt="" width="42" height="42">
+      Кухонный учет
+    </a>
+    <nav aria-label="Главная навигация">
+      <a href="{% url 'homepage:index' %}"{% if active == 'home' %} class="current" aria-current="page"{% endif %}>Обзор</a>
+      <a href="{% url 'items:list' %}"{% if active == 'items' %} class="current" aria-current="page"{% endif %}>Инвентарь</a>
+      <a href="{% url 'movements:list' %}"{% if active == 'moves' %} class="current" aria-current="page"{% endif %}>Перемещения</a>
+    </nav>
+    <span class="group-label">ЭФБО-12-24</span>
+  </div>
+</header>

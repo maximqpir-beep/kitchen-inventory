@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Инвентарь{% endblock %}
+{% block content %}
+  <p class="eyebrow">01 / КАТАЛОГ</p>
+  <div class="section-header">
+    <div><h1>Кухонный инвентарь</h1><p class="subtitle">Состояние и расположение каждой партии.</p></div>
+    <span class="count">Найдено: {{ items|length }}</span>
+  </div>
+  <form class="search-bar" method="get" action="{% url 'items:list' %}">
+    <label for="q">Поиск по названию</label>
+    <div class="search-row">
+      <input id="q" name="q" value="{{ query|default:'' }}" placeholder="Например, нож" class="form-control">
+      <button class="btn btn-primary" type="submit">Найти</button>
+      <button class="btn btn-outline-secondary" type="button" id="view-toggle" aria-controls="catalog-grid" aria-pressed="false" hidden>Компактный вид</button>
+    </div>
+  </form>
+  <div class="inventory-grid" id="catalog-grid">
+    {% for item in items %}
+      {% include 'items/includes/item_card.html' with item=item only %}
+    {% empty %}
+      <div class="empty-state">
+        <h2>Предметы не найдены</h2>
+        <p>Попробуйте другой запрос или откройте весь каталог.</p>
+        <a href="{% url 'items:list' %}">Сбросить поиск</a>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

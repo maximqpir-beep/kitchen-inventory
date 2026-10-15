@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Обзор{% endblock %} · Кухонный учет</title>
+    <link rel="icon" href="{% static 'homepage/img/logo.svg' %}" type="image/svg+xml">
+    <link rel="stylesheet" href="{% static 'homepage/vendor/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage/css/style.css' %}">
+    <script src="{% static 'homepage/js/catalog.js' %}" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Перейти к содержимому</a>
+    {% include 'includes/navigation.html' %}
+    <main class="shell main-content" id="main">
+      {% block content %}{% endblock %}
+    </main>
+    {% include 'includes/footer.html' %}
+  </body>
+</html>

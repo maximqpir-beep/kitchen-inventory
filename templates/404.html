@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Страница не найдена{% endblock %}
+{% block content %}
+  <section class="error-panel">
+    <p class="eyebrow">ОШИБКА 404</p>
+    <h1>Страница не найдена</h1>
+    <p>Проверьте адрес или выберите предмет из каталога.</p>
+    <a class="btn btn-primary" href="{% url 'homepage:index' %}">На главную</a>
+  </section>
+{% endblock %}

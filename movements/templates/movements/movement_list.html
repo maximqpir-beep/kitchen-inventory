@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Перемещения{% endblock %}
+{% block content %}
+  <p class="eyebrow">02 / ИСТОРИЯ</p>
+  <h1>Перемещения</h1>
+  <p class="subtitle">Откуда, куда и когда перемещался инвентарь.</p>
+  <div class="table-panel table-responsive">
+    <table class="table">
+      <caption class="visually-hidden">Журнал перемещений инвентаря</caption>
+      <thead><tr><th scope="col">Запись</th><th scope="col">Предмет</th><th scope="col">Маршрут</th><th scope="col">Дата</th><th scope="col">Статус</th></tr></thead>
+      <tbody>
+        {% for entry in entries %}
+          <tr>
+            <td><a href="{% url 'movements:detail' entry.movement.id %}">№ {{ entry.movement.id }}</a></td>
+            <td>{{ entry.movement.item.name }}</td>
+            <td>{{ entry.movement.source.name }} → {{ entry.movement.target.name }}</td>
+            <td>{{ entry.created_at|date:'d.m.Y H:i' }}</td>
+            <td>{% include 'movements/includes/status.html' with movement=entry.movement only %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">Перемещений пока нет.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="quiet-note">Отмененные записи остаются в истории. Новые записи показаны первыми.</p>
+{% endblock %}

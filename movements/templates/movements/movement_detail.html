@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Перемещение № {{ movement.id }}{% endblock %}
+{% block content %}
+  <a class="back-link" href="{% url 'movements:list' %}">← Все перемещения</a>
+  <section class="detail-panel">
+    <p class="eyebrow">ЗАПИСЬ № {{ movement.id }}</p>
+    <div class="section-header">
+      <h1>Перемещение инвентаря</h1>
+      {% include 'movements/includes/status.html' with movement=movement only %}
+    </div>
+    <p class="subtitle">{{ created_at|date:'d.m.Y H:i' }}</p>
+    <div class="route-panel">
+      <div><span>Откуда</span><strong>{{ movement.source.name }}</strong></div>
+      <span aria-hidden="true">→</span>
+      <div><span>Куда</span><strong>{{ movement.target.name }}</strong></div>
+    </div>
+    {% if movement.cancelled %}
+      <p>Запись отменена и не участвует в текущей цепочке перемещений.</p>
+    {% else %}
+      <p>Перемещение выполнено.</p>
+    {% endif %}
+    <p>Предмет: <a href="{% url 'items:detail' movement.item.id %}">{{ movement.item.name }}</a></p>
+    <p class="quiet-note">Маршрут записи не обязательно совпадает с текущим помещением предмета: после нее могли быть другие операции.</p>
+  </section>
+{% endblock %}

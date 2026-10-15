@@ -1,0 +1,19 @@
+{% load inventory_tags %}
+<article class="inventory-card card">
+  <div class="card-body">
+    <div class="card-top">
+      <span class="eyebrow">№ {{ item.id|stringformat:'03d' }}</span>
+      {% include 'items/includes/state.html' with item=item only %}
+    </div>
+    <h2 class="card-title" title="{{ item.name }}">{{ item.name|truncatechars:48 }}</h2>
+    <p class="category">{{ item.category.name|default:'Без категории' }}</p>
+    <dl class="card-facts">
+      <div><dt>Помещение</dt><dd>{{ item.room.name }}</dd></div>
+      <div><dt>Количество</dt><dd>{{ item.quantity }} шт.</dd></div>
+    </dl>
+    <div class="card-bottom">
+      <strong>{{ item.total|money }} ₽</strong>
+      <a href="{% url 'items:detail' item.id %}">Подробнее →</a>
+    </div>
+  </div>
+</article>

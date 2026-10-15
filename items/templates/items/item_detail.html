@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load inventory_tags %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+  <a class="back-link" href="{% url 'items:list' %}">← Весь инвентарь</a>
+  <section class="detail-panel">
+    <p class="eyebrow">ПРЕДМЕТ № {{ item.id }}</p>
+    <div class="section-header">
+      <h1>{{ item.name }}</h1>
+      {% include 'items/includes/state.html' with item=item only %}
+    </div>
+    <p class="subtitle">{{ item.category.name }}</p>
+    <dl class="detail-facts">
+      <div><dt>Помещение</dt><dd>{{ item.room.name }}</dd></div>
+      <div><dt>Количество</dt><dd>{{ item.quantity }} шт.</dd></div>
+      <div><dt>Цена за штуку</dt><dd>{{ item.unit_price|money }} ₽</dd></div>
+      <div><dt>Стоимость партии</dt><dd>{{ item.total|money }} ₽</dd></div>
+    </dl>
+    <div class="usage-note">
+      <strong>{{ item.usage_status }}</strong>
+      <p>{{ item.handling_note }}</p>
+    </div>
+  </section>
+{% endblock %}
