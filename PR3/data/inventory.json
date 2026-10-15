@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": 1,
+      "name": "Кастрюля 5 л",
+      "category_id": 1,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 125050
+    },
+    {
+      "id": 2,
+      "name": "Нож поварской",
+      "category_id": 2,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 85000
+    },
+    {
+      "id": 3,
+      "name": "Сковорода",
+      "category_id": 1,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 180000
+    },
+    {
+      "id": 4,
+      "name": "Доска разделочная",
+      "category_id": 3,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 45000
+    },
+    {
+      "id": 5,
+      "name": "Половник",
+      "category_id": 4,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 32000
+    },
+    {
+      "id": 6,
+      "name": "Венчик",
+      "category_id": 3,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 28000
+    },
+    {
+      "id": 7,
+      "name": "Дуршлаг",
+      "category_id": 3,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 65000
+    },
+    {
+      "id": 8,
+      "name": "Противень",
+      "category_id": 5,
+      "state_id": 1,
+      "room_id": 1,
+      "quantity": 1,
+      "unit_price": 95000
+    }
+  ],
+  "moves": []
+}
