@@ -1,41 +1,27 @@
-"""Веб-слой читает объекты ПР3, не изменяя JSON при GET-запросах."""
-
-from pathlib import Path
+"""Веб-часть ПР7 читает только SQLite; JSON остается в консоли ПР3."""
 
 from django.conf import settings
 from django.http import Http404
 
-from inventory import find_items, get_item, sort_items
-from storage import load_data
+from db.database import DataUnavailable, fetch_all, fetch_one  # noqa: F401
 
 
-class DataUnavailable(Exception):
-    """Хранилище отсутствует, повреждено или недоступно."""
+def rows(name, parameters=()):
+    return fetch_all(name, parameters, path=settings.DATABASE_PATH)
 
 
-def read_inventory() -> dict:
-    path = Path(settings.INVENTORY_PATH)
-    try:
-        if not path.is_file():
-            raise FileNotFoundError(path.name)
-        return load_data(path)
-    except (OSError, ValueError, UnicodeError) as error:
-        raise DataUnavailable("Не удалось прочитать JSON.") from error
+def row(name, parameters=()):
+    return fetch_one(name, parameters, path=settings.DATABASE_PATH)
 
 
-def find_item_or_404(data: dict, item_id: int):
-    try:
-        return get_item(data, item_id)
-    except ValueError as error:
-        raise Http404("Предмет не найден.") from error
+def row_or_404(name, identifier):
+    result = row(name, (identifier,))
+    if result is None:
+        raise Http404("Запись не найдена.")
+    return result
 
 
-def find_movement_or_404(data: dict, movement_id: int):
-    for movement in data["moves"]:
-        if movement.id == movement_id:
-            return movement
-    raise Http404("Перемещение не найдено.")
-
-
-def select_items(data: dict, query: str) -> list:
-    return sort_items(find_items(data, query), "name")
+def search_pattern(text):
+    """Поиск кириллицы без регистра; %, _ и слеш - обычные символы."""
+    text = text.casefold().replace("\\", "\\\\")
+    return "%" + text.replace("%", "\\%").replace("_", "\\_") + "%"

@@ -10,16 +10,16 @@
     </div>
     <p class="subtitle">{{ created_at|date:'d.m.Y H:i' }}</p>
     <div class="route-panel">
-      <div><span>Откуда</span><strong>{{ movement.source.name }}</strong></div>
+      <div><span>Откуда</span><strong>{{ movement.source_name }}</strong></div>
       <span aria-hidden="true">→</span>
-      <div><span>Куда</span><strong>{{ movement.target.name }}</strong></div>
+      <div><span>Куда</span><strong>{{ movement.target_name }}</strong></div>
     </div>
     {% if movement.cancelled %}
       <p>Запись отменена и не участвует в текущей цепочке перемещений.</p>
     {% else %}
       <p>Перемещение выполнено.</p>
     {% endif %}
-    <p>Предмет: <a href="{% url 'items:detail' movement.item.id %}">{{ movement.item.name }}</a></p>
+    <p>Предмет: <a href="{% url 'items:detail' movement.item_id %}">{{ movement.item_name }}</a></p>
     <p class="quiet-note">Маршрут записи не обязательно совпадает с текущим помещением предмета: после нее могли быть другие операции.</p>
   </section>
 {% endblock %}

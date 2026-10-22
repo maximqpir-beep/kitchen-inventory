@@ -9,6 +9,8 @@
       <a href="{% url 'homepage:index' %}"{% if active == 'home' %} class="current" aria-current="page"{% endif %}>Обзор</a>
       <a href="{% url 'items:list' %}"{% if active == 'items' %} class="current" aria-current="page"{% endif %}>Инвентарь</a>
       <a href="{% url 'movements:list' %}"{% if active == 'moves' %} class="current" aria-current="page"{% endif %}>Перемещения</a>
+      <a href="{% url 'homepage:rooms' %}"{% if active == 'rooms' %} class="current" aria-current="page"{% endif %}>Помещения</a>
+      <a href="{% url 'homepage:statistics' %}"{% if active == 'stats' %} class="current" aria-current="page"{% endif %}>Статистика</a>
     </nav>
     <span class="group-label">ЭФБО-12-24</span>
   </div>

@@ -41,3 +41,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INVENTORY_PATH = BASE_DIR / "data" / "inventory.json"
+
+DATABASE_PATH = BASE_DIR / "data" / "inventory.sqlite"

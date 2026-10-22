@@ -1,7 +1,7 @@
-{% if item.condition.usable %}
-  <span class="status good">{{ item.condition.name }}</span>
-{% elif item.condition.id == 2 %}
-  <span class="status warn">{{ item.condition.name }}</span>
+{% if item.usable %}
+  <span class="status good">{{ item.state_name }}</span>
+{% elif item.state_id == 2 %}
+  <span class="status warn">{{ item.state_name }}</span>
 {% else %}
-  <span class="status muted">{{ item.condition.name }}</span>
+  <span class="status muted">{{ item.state_name }}</span>
 {% endif %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load inventory_tags %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+  <h1>Статистика инвентаря</h1><p class="subtitle">Количество предметов, стоимость и история перемещений.</p>
+  <section class="stats" aria-label="Сводка">
+    <div><span>Партий</span><strong>{{ stats.batches }}</strong></div>
+    <div><span>Предметов</span><strong>{{ stats.units }}</strong></div>
+    <div><span>Исправных предметов</span><strong>{{ stats.usable }}</strong></div>
+    <div><span>Общая стоимость</span><strong>{{ stats.total|money }} ₽</strong></div>
+  </section>
+  <p>Перемещений: {{ moves.total }}. Выполнено: {{ moves.done }}. Отменено: {{ moves.cancelled }}.</p>
+  <p>Цена за штуку: минимум {% if prices.minimum != None %}{{ prices.minimum|money }} ₽{% else %}нет данных{% endif %}, максимум {% if prices.maximum != None %}{{ prices.maximum|money }} ₽{% else %}нет данных{% endif %}, средняя {% if prices.average != None %}{{ prices.average|money }} ₽{% else %}нет данных{% endif %}.</p>
+  <h2>По категориям</h2>
+  {% include 'homepage/includes/summary_table.html' with entries=categories heading='Категория' only %}
+  <h2>По помещениям</h2>
+  {% include 'homepage/includes/summary_table.html' with entries=rooms heading='Помещение' only %}
+  <h2>По состояниям</h2>
+  <div class="table-panel table-responsive"><table class="table"><thead><tr><th>Состояние</th><th>Партий</th><th>Предметов, шт.</th></tr></thead><tbody>{% for entry in conditions %}<tr><td>{{ entry.name }}</td><td>{{ entry.batches }}</td><td>{{ entry.units }}</td></tr>{% empty %}<tr><td colspan="3">Нет данных.</td></tr>{% endfor %}</tbody></table></div>
+  <h2>Помещения с заданным количеством предметов</h2>
+  <form class="search-bar" method="get" action="{% url 'homepage:statistics' %}"><label for="min-units">Не меньше предметов, шт.</label><div class="search-row"><input id="min-units" name="min_units" type="number" min="0" max="1000000" value="{{ threshold }}" class="form-control"><button class="btn btn-primary" type="submit">Показать</button></div></form>
+  <ul>{% for entry in heavy_rooms %}<li>{{ entry.name }}: {{ entry.units }} шт.</li>{% empty %}<li>Нет помещений с таким количеством предметов.</li>{% endfor %}</ul>
+{% endblock %}

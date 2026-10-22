@@ -13,7 +13,13 @@
       <button class="btn btn-primary" type="submit">Найти</button>
       <button class="btn btn-outline-secondary" type="button" id="view-toggle" aria-controls="catalog-grid" aria-pressed="false" hidden>Компактный вид</button>
     </div>
+    <div class="filter-row">
+      <label>Помещение<select name="room" class="form-select"><option value="0">Все помещения</option>{% for r in rooms %}<option value="{{ r.id }}"{% if r.id == room_id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</select></label>
+      <label>Состояние<select name="state" class="form-select"><option value="0">Все состояния</option>{% for s in conditions %}<option value="{{ s.id }}"{% if s.id == state_id %} selected{% endif %}>{{ s.name }}</option>{% endfor %}</select></label>
+      <label>Категория<select name="category" class="form-select"><option value="0">Все категории</option>{% for c in categories %}<option value="{{ c.id }}"{% if c.id == category_id %} selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></label>
+    </div>
   </form>
+  <p><a href="{% url 'items:available' %}">Найти пригодный к использованию инвентарь →</a></p>
   <div class="inventory-grid" id="catalog-grid">
     {% for item in items %}
       {% include 'items/includes/item_card.html' with item=item only %}

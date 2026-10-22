@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Помещения{% endblock %}
+{% block content %}
+  <h1>Помещения кухни</h1><p class="subtitle">Выберите помещение, чтобы посмотреть его инвентарь.</p>
+  <div class="feature-grid">
+    {% for room in rooms %}<article class="feature-card"><h2>{{ room.name }}</h2><p>{{ room.description|default:'Описание пока не добавлено.' }}</p><a href="{% url 'items:list' %}?room={{ room.id }}">Весь инвентарь →</a><br><a href="{% url 'items:available' %}?room={{ room.id }}">Пригодные предметы →</a></article>
+    {% empty %}<p>Помещения не добавлены.</p>{% endfor %}
+  </div>
+{% endblock %}

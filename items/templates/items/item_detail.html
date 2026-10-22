@@ -9,16 +9,16 @@
       <h1>{{ item.name }}</h1>
       {% include 'items/includes/state.html' with item=item only %}
     </div>
-    <p class="subtitle">{{ item.category.name }}</p>
+    <p class="subtitle">{{ item.category_name }}</p>
     <dl class="detail-facts">
-      <div><dt>Помещение</dt><dd>{{ item.room.name }}</dd></div>
+      <div><dt>Помещение</dt><dd>{{ item.room_name }}</dd></div>
       <div><dt>Количество</dt><dd>{{ item.quantity }} шт.</dd></div>
       <div><dt>Цена за штуку</dt><dd>{{ item.unit_price|money }} ₽</dd></div>
       <div><dt>Стоимость партии</dt><dd>{{ item.total|money }} ₽</dd></div>
     </dl>
     <div class="usage-note">
-      <strong>{{ item.usage_status }}</strong>
-      <p>{{ item.handling_note }}</p>
+      <strong>{% if item.usable %}Разрешен к использованию{% else %}Использование запрещено: {{ item.state_name }}{% endif %}</strong>
+      <p>{% if item.category_id == 2 %}Храните режущую кромку в защитном чехле.{% else %}Соблюдайте обычные правила хранения.{% endif %}</p>
     </div>
   </section>
 {% endblock %}

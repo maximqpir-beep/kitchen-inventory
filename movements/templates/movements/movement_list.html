@@ -4,6 +4,13 @@
   <p class="eyebrow">02 / ИСТОРИЯ</p>
   <h1>Перемещения</h1>
   <p class="subtitle">Откуда, куда и когда перемещался инвентарь.</p>
+  <form class="search-bar" method="get" action="{% url 'movements:list' %}">
+    <div class="filter-row">
+      <label>Дата перемещения<input type="date" name="date" value="{{ date }}" class="form-control"></label>
+      <label>Статус<select name="status" class="form-select"><option value="-1"{% if status == -1 %} selected{% endif %}>Все записи</option><option value="0"{% if status == 0 %} selected{% endif %}>Выполненные</option><option value="1"{% if status == 1 %} selected{% endif %}>Отмененные</option></select></label>
+      <button type="submit" class="btn btn-primary">Показать</button>
+    </div>
+  </form>
   <div class="table-panel table-responsive">
     <table class="table">
       <caption class="visually-hidden">Журнал перемещений инвентаря</caption>
@@ -12,16 +19,21 @@
         {% for entry in entries %}
           <tr>
             <td><a href="{% url 'movements:detail' entry.movement.id %}">№ {{ entry.movement.id }}</a></td>
-            <td>{{ entry.movement.item.name }}</td>
-            <td>{{ entry.movement.source.name }} → {{ entry.movement.target.name }}</td>
+            <td>{{ entry.movement.item_name }}</td>
+            <td>{{ entry.movement.source_name }} → {{ entry.movement.target_name }}</td>
             <td>{{ entry.created_at|date:'d.m.Y H:i' }}</td>
             <td>{% include 'movements/includes/status.html' with movement=entry.movement only %}</td>
           </tr>
         {% empty %}
-          <tr><td colspan="5">Перемещений пока нет.</td></tr>
+          <tr><td colspan="5">Перемещений пока нет по выбранным условиям.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+  <nav class="pagination-row" aria-label="Страницы журнала">
+    {% if previous %}<a href="{% url 'movements:list' %}?{{ previous }}">← Назад</a>{% endif %}
+    <span>Страница {{ page }}</span>
+    {% if following %}<a href="{% url 'movements:list' %}?{{ following }}">Далее →</a>{% endif %}
+  </nav>
   <p class="quiet-note">Отмененные записи остаются в истории. Новые записи показаны первыми.</p>
 {% endblock %}

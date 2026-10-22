@@ -11,14 +11,17 @@ from catalog import demo_data
 from homepage.templatetags.inventory_tags import money
 from inventory import import_data, move_item
 from storage import save_data
+from db.import_json import import_json
 
 
 @pytest.fixture
 def page_data(tmp_path, settings):
     settings.INVENTORY_PATH = tmp_path / "inventory.json"
+    settings.DATABASE_PATH = tmp_path / "inventory.sqlite"
     data = import_data(demo_data())
     move_item(data, 1, 3)
     save_data(data, settings.INVENTORY_PATH)
+    import_json(settings.INVENTORY_PATH, settings.DATABASE_PATH)
     return data
 
 
@@ -39,8 +42,8 @@ def test_template_and_base_used(client, page_data, url, template):
 
 def test_objects_in_context(client, page_data):
     response = client.get("/items/1/")
-    assert response.context["item"].name == "Кастрюля 5 л"
-    assert response.context["item"].room.name == "Склад"
+    assert response.context["item"]["name"] == "Кастрюля 5 л"
+    assert response.context["item"]["room_name"] == "Склад"
 
 
 def test_filters_and_default():

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Пригодный инвентарь{% endblock %}
+{% block content %}
+  <a class="back-link" href="{% url 'items:list' %}">← Весь инвентарь</a>
+  <h1>Пригодный к использованию инвентарь</h1>
+  <p class="subtitle">Только исправные предметы. Требующие ремонта и списанные партии исключены.</p>
+  <form class="search-bar" method="get" action="{% url 'items:available' %}">
+    <label for="room">Место хранения</label>
+    <div class="search-row">
+      <select id="room" name="room" class="form-select"><option value="0">Все помещения</option>{% for r in rooms %}<option value="{{ r.id }}"{% if r.id == room_id %} selected{% endif %}>{{ r.name }}</option>{% endfor %}</select>
+      <button type="submit" class="btn btn-primary">Найти</button>
+    </div>
+  </form>
+  <p>Найдено партий: {{ items|length }}</p>
+  <div class="inventory-grid">
+    {% for item in items %}{% include 'items/includes/item_card.html' with item=item only %}
+    {% empty %}<div class="empty-state"><h2>Подходящих предметов нет</h2><p>Выберите другое помещение.</p></div>{% endfor %}
+  </div>
+{% endblock %}

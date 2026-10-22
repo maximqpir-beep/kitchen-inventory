@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Проверьте параметры{% endblock %}
+{% block content %}<section class="error-panel"><p class="eyebrow">ОШИБКА 400</p><h1>Проверьте параметры поиска</h1><p>{{ error }}</p><a href="{% url 'items:list' %}">Открыть каталог</a></section>{% endblock %}

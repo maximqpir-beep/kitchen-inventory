@@ -6,9 +6,9 @@
       {% include 'items/includes/state.html' with item=item only %}
     </div>
     <h2 class="card-title" title="{{ item.name }}">{{ item.name|truncatechars:48 }}</h2>
-    <p class="category">{{ item.category.name|default:'Без категории' }}</p>
+    <p class="category">{{ item.category_name|default:'Без категории' }}</p>
     <dl class="card-facts">
-      <div><dt>Помещение</dt><dd>{{ item.room.name }}</dd></div>
+      <div><dt>Помещение</dt><dd>{{ item.room_name }}</dd></div>
       <div><dt>Количество</dt><dd>{{ item.quantity }} шт.</dd></div>
     </dl>
     <div class="card-bottom">

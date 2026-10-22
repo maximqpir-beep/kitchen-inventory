@@ -32,5 +32,11 @@
       <p>Посмотрите маршруты предметов и отмененные записи.</p>
     </a>
   </div>
-  <p class="quiet-note">На сайте доступен просмотр. Добавление и изменение данных выполняются через консольное меню main.py.</p>
+  <section class="section-header"><h2>Самые дорогие партии</h2></section>
+  <div class="inventory-grid">
+    {% for item in expensive %}
+      {% include 'items/includes/item_card.html' with item=item only %}
+    {% empty %}<p>Инвентарь пока не добавлен.</p>{% endfor %}
+  </div>
+  <p class="quiet-note">На сайте доступен просмотр инвентаря и истории перемещений.</p>
 {% endblock %}

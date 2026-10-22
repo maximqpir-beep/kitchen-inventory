@@ -11,12 +11,19 @@ from inventory import (
     cancel_move, change_state, import_data, move_item,
 )
 from storage import save_data
+from db.import_json import import_json
+
+
+def save_web_data(data, settings):
+    save_data(data, settings.INVENTORY_PATH)
+    import_json(settings.INVENTORY_PATH, settings.DATABASE_PATH, replace=True)
 
 
 @pytest.fixture
 def web_data(tmp_path, settings):
     path = tmp_path / "inventory.json"
     settings.INVENTORY_PATH = path
+    settings.DATABASE_PATH = tmp_path / "inventory.sqlite"
     settings.DEBUG = False
     data = import_data(demo_data())
     move_item(data, 2, 3)
@@ -24,7 +31,7 @@ def web_data(tmp_path, settings):
     cancel_move(data, 2)
     change_state(data, 4, 2)
     change_state(data, 5, 3)
-    save_data(data, path)
+    save_web_data(data, settings)
     return data
 
 
@@ -81,7 +88,7 @@ def test_statuses_and_related_objects(client, web_data):
 
 def test_empty_collections(client, settings, web_data):
     data = import_data({"version": 1, "items": [], "moves": []})
-    save_data(data, settings.INVENTORY_PATH)
+    save_web_data(data, settings)
     assert client.get("/").status_code == 200
     assert "Предметы не найдены" in client.get("/items/").content.decode()
     assert "Перемещений пока нет" in client.get("/movements/").content.decode()
@@ -89,7 +96,7 @@ def test_empty_collections(client, settings, web_data):
 
 def test_escape_names_and_query(client, settings, web_data):
     web_data["items"][0].name = '<script>alert("x")</script>'
-    save_data(web_data, settings.INVENTORY_PATH)
+    save_web_data(web_data, settings)
     for url in ("/items/", "/items/1/"):
         content = client.get(url).content.decode()
         assert '<script>alert("x")</script>' not in content
@@ -101,21 +108,23 @@ def test_escape_names_and_query(client, settings, web_data):
 @pytest.mark.parametrize("url", ["/", "/items/", "/movements/"])
 def test_read_only_and_head(client, settings, web_data, url):
     before = settings.INVENTORY_PATH.read_bytes()
+    database_before = settings.DATABASE_PATH.read_bytes()
     assert client.get(url).status_code == 200
     assert client.head(url).status_code == 200
     assert client.post(url, {"name": "changed"}).status_code == 405
     assert settings.INVENTORY_PATH.read_bytes() == before
+    assert settings.DATABASE_PATH.read_bytes() == database_before
 
 
-def test_updates_visible_without_restart(client, settings, web_data):
+def test_reimport_updates_visible_without_restart(client, settings, web_data):
     web_data["items"][0].name = "Обновленная кастрюля"
-    save_data(web_data, settings.INVENTORY_PATH)
+    save_web_data(web_data, settings)
     assert "Обновленная кастрюля" in client.get("/items/1/").content.decode()
 
 
 @pytest.mark.parametrize("problem", ["missing", "broken", "wrong_schema"])
 def test_storage_errors_do_not_overwrite(client, settings, web_data, problem):
-    path = settings.INVENTORY_PATH
+    path = settings.DATABASE_PATH
     if problem == "missing":
         path.unlink()
     else:
