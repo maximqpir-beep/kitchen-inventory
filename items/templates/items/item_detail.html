@@ -9,6 +9,8 @@
       <h1>{{ item.name }}</h1>
       {% include 'items/includes/state.html' with item=item only %}
     </div>
+    {% if item.image %}<img class="item-photo" src="{{ item.image.url }}" alt="{{ item.name }}">{% endif %}
+    {% if perms.items.change_item %}<p><a href="{% url 'items:edit' item.pk %}">Редактировать предмет</a></p>{% endif %}
     <p class="subtitle">{{ item.category_name }}</p>
     <dl class="detail-facts">
       <div><dt>Помещение</dt><dd>{{ item.room_name }}</dd></div>

@@ -1,6 +1,12 @@
 """Каталог, фильтры, поиск и связанные объекты Django ORM."""
 
 from django.db.models import Q
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.shortcuts import redirect
+from django.views.decorators.http import require_http_methods
+from .forms import ItemForm
+from .models import Item
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_safe
 
@@ -84,3 +90,38 @@ def item_detail(request, item_id):
             "active": "items",
         },
     )
+
+
+def item_form(request, instance=None):
+    form = ItemForm(
+        request.POST if request.method == "POST" else None,
+        request.FILES if request.method == "POST" else None,
+        instance=instance,
+    )
+    if request.method == "POST" and form.is_valid():
+        item = form.save()
+        messages.success(request, "Предмет сохранен.")
+        return redirect(item)
+    return render(
+        request,
+        "items/item_form.html",
+        {
+            "form": form,
+            "item": instance,
+            "active": "items",
+        },
+    )
+
+
+@login_required
+@permission_required("items.add_item", raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def create(request):
+    return item_form(request)
+
+
+@login_required
+@permission_required("items.change_item", raise_exception=True)
+@require_http_methods(["GET", "POST"])
+def edit(request, item_id):
+    return item_form(request, get_object_or_404(Item, pk=item_id))

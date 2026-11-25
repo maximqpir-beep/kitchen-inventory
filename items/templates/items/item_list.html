@@ -2,6 +2,7 @@
 {% block title %}Инвентарь{% include 'includes/pagination.html' %}
 {% endblock %}
 {% block content %}
+  {% if perms.items.add_item %}<p><a class="btn btn-primary" href="{% url 'items:create' %}">Новый предмет</a></p>{% endif %}
   <p class="eyebrow">01 / КАТАЛОГ</p>
   <div class="section-header">
     <div><h1>Кухонный инвентарь</h1><p class="subtitle">Состояние и расположение каждой партии.</p></div>

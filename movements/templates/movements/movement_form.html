@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}{% if movement %}Редактирование плана{% else %}Новое перемещение{% endif %}{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'movements:list' %}">← Перемещения</a>
+<h1>{% if movement %}Редактирование плана № {{ movement.pk }}{% else %}Новое перемещение{% endif %}</h1>
+<p class="subtitle">Запланируйте перемещение исправной партии. Текущее помещение определяется автоматически. На одну дату у партии может быть один план.</p>
+<form class="detail-panel editor-form" method="post" action="{% if movement %}{% url 'movements:edit' movement.pk %}{% else %}{% url 'movements:create' %}{% endif %}">
+  {% csrf_token %}{% include 'includes/form_fields.html' %}
+  <button class="btn btn-primary" type="submit">Сохранить план</button>
+</form>
+{% endblock %}

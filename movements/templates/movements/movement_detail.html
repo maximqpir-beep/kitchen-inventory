@@ -23,4 +23,16 @@
     <p>Предмет: <a href="{% url 'items:detail' movement.item_id %}">{{ movement.item_name }}</a></p>
     <p class="quiet-note">Маршрут записи не обязательно совпадает с текущим помещением предмета: после нее могли быть другие операции.</p>
   </section>
+{% if perms.movements.change_movement %}
+<div class="action-row">
+{% if movement.status == 'PLANNED' %}
+<a class="btn btn-outline-secondary" href="{% url 'movements:edit' movement.pk %}">Редактировать план</a>
+<form method="post" action="{% url 'movements:complete' movement.pk %}">{% csrf_token %}<button class="btn btn-primary" type="submit">Выполнить перемещение</button></form>
+{% endif %}
+{% if movement.status != 'CANCELLED' %}
+<form method="post" action="{% url 'movements:cancel' movement.pk %}">{% csrf_token %}<button class="btn btn-outline-danger" type="submit">Отменить перемещение</button></form>
+{% if movement.status == 'COMPLETED' %}<p>Отмена вернет предмет в исходное помещение, если запись последняя в его истории.</p>{% endif %}
+{% endif %}
+</div>{% endif %}
+<p>{{ movement.note|default:'' }}</p>
 {% endblock %}

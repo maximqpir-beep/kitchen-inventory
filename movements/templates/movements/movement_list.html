@@ -4,14 +4,11 @@
   <p class="eyebrow">02 / ИСТОРИЯ</p>
   <h1>Перемещения</h1>
   <p class="subtitle">Откуда, куда и когда перемещался инвентарь.</p>
+  {% if perms.movements.add_movement %}<p><a class="btn btn-primary" href="{% url 'movements:create' %}">Новое перемещение</a></p>{% else %}<p><a href="{% url 'admin:login' %}?next={% url 'movements:create' %}">Войти для оформления перемещения</a></p>{% endif %}
   <form class="search-bar" method="get" action="{% url 'movements:list' %}">
-    <div class="filter-row">
-      <label>Дата перемещения<input type="date" name="date" value="{{ date }}" class="form-control"></label>
-      <label>Статус<select name="status" class="form-select"><option value="-1"{% if status == -1 %} selected{% endif %}>Все записи</option><option value="0"{% if status == 0 %} selected{% endif %}>Выполненные</option><option value="1"{% if status == 1 %} selected{% endif %}>Отмененные</option><option value="2"{% if status == 2 %} selected{% endif %}>Запланированные</option></select></label>
-      <button type="submit" class="btn btn-primary">Показать</button>
-      <label>Поиск<input name="q" value="{{ query }}" class="form-control"></label>
-      <label>Порядок<select name="sort" class="form-select"><option value="newest"{% if sort == 'newest' %} selected{% endif %}>Новые первыми</option><option value="oldest"{% if sort == 'oldest' %} selected{% endif %}>Старые первыми</option><option value="item"{% if sort == 'item' %} selected{% endif %}>По предмету</option></select></label>
-    </div>
+    <div class="filter-grid">{% include 'includes/form_fields.html' %}</div>
+    <button class="btn btn-primary" type="submit">Показать</button>
+    <a href="{% url 'movements:list' %}">Сбросить фильтры</a>
   </form>
   <div class="table-panel table-responsive">
     <table class="table">
@@ -23,7 +20,7 @@
             <td><a href="{% url 'movements:detail' entry.movement.id %}">№ {{ entry.movement.id }}</a></td>
             <td>{{ entry.movement.item_name }}</td>
             <td>{{ entry.movement.source_name }} → {{ entry.movement.target_name }}</td>
-            <td>{{ entry.created_at|date:'d.m.Y H:i' }}</td>
+            <td>{{ entry.movement.scheduled_for|date:'d.m.Y' }}</td>
             <td>{% include 'movements/includes/status.html' with movement=entry.movement only %}</td>
           </tr>
         {% empty %}

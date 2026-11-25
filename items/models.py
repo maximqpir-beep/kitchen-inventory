@@ -1,6 +1,7 @@
 """Модели ПР9; классы старой консоли остаются в models/."""
 
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
@@ -104,6 +105,7 @@ class Item(models.Model):
     unit_price = models.PositiveBigIntegerField(
         "Цена, коп.", validators=[MinValueValidator(1)]
     )
+    image = models.ImageField("Фото", upload_to="inventory/%Y/%m/", blank=True)
     total_price = models.GeneratedField(
         expression=F("quantity") * F("unit_price"),
         output_field=models.BigIntegerField(),
@@ -126,6 +128,20 @@ class Item(models.Model):
                 name="item_price_positive",
             ),
         ]
+
+    def clean(self):
+        super().clean()
+        if self.pk:
+            previous = (
+                type(self)
+                .objects.filter(pk=self.pk)
+                .values_list("condition_id", flat=True)
+                .first()
+            )
+            if previous == 3 and self.condition_id != 3:
+                raise ValidationError(
+                    {"condition": "Нельзя восстановить списанный предмет."}
+                )
 
     def save(self, *args, **kwargs):
         self.name = self.name.strip()

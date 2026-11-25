@@ -1,0 +1,50 @@
+Проверка 25.11.2026. Python 3.12; Django 5.2.19.
+
+$ python manage.py check
+System check identified no issues (0 silenced).
+Exit code: 0
+
+$ python manage.py showmigrations
+admin
+ [X] 0001_initial
+ [X] 0002_logentry_remove_auto_add
+ [X] 0003_logentry_add_action_flag_choices
+auth
+ [X] 0001_initial
+ [X] 0002_alter_permission_name_max_length
+ [X] 0003_alter_user_email_max_length
+ [X] 0004_alter_user_username_opts
+ [X] 0005_alter_user_last_login_null
+ [X] 0006_require_contenttypes_0002
+ [X] 0007_alter_validators_add_error_messages
+ [X] 0008_alter_user_username_max_length
+ [X] 0009_alter_user_last_name_max_length
+ [X] 0010_alter_group_name_max_length
+ [X] 0011_update_proxy_permissions
+ [X] 0012_alter_user_first_name_max_length
+contenttypes
+ [X] 0001_initial
+ [X] 0002_remove_content_type_name
+items
+ [X] 0001_initial
+ [X] 0002_item_total_price_room_slug
+ [X] 0003_item_image
+movements
+ [X] 0001_initial
+ [X] 0002_alter_movement_options_remove_movement_cancelled_and_more
+sessions
+ [X] 0001_initial
+Exit code: 0
+
+$ python manage.py makemigrations --check --dry-run
+No changes detected
+Exit code: 0
+
+$ python -m pytest -q
+........................................................................ [ 74%]
+.........................                                                [100%]
+97 passed in 6.07s
+Exit code: 0
+
+$ python -m flake8 . --extend-exclude=venv
+Exit code: 0

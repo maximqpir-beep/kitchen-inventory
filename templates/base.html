@@ -14,6 +14,7 @@
     <a class="skip-link" href="#main">Перейти к содержимому</a>
     {% include 'includes/navigation.html' %}
     <main class="shell main-content" id="main">
+      {% for message in messages %}<div class="notice {{ message.tags }}" role="status">{{ message }}</div>{% endfor %}
       {% block content %}{% endblock %}
     </main>
     {% include 'includes/footer.html' %}
