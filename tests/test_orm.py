@@ -7,9 +7,9 @@ from django.test.utils import CaptureQueriesContext
 from django.db import connection
 import pytest
 
-from items.models import Category, Condition, Item, Room
-from kitchen_site import orm
-from movements.models import Movement
+from apps.items.models import Category, Condition, Item, Room
+from config import orm
+from apps.movements.models import Movement
 
 
 @pytest.mark.django_db

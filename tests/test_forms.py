@@ -8,9 +8,9 @@ from django.utils import timezone
 from PIL import Image
 import pytest
 
-from items.models import Item
-from movements.models import Movement
-from movements.services import save_plan
+from apps.items.models import Item
+from apps.movements.models import Movement
+from apps.movements.services import save_plan
 
 pytestmark = pytest.mark.django_db
 

@@ -1,6 +1,6 @@
 import pytest
 
-from items.models import Item
+from apps.items.models import Item
 
 pytestmark = pytest.mark.django_db
 

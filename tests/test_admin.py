@@ -9,9 +9,13 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.utils import timezone
 import pytest
 
-from items.models import Item, Room
-from movements.models import Movement
-from movements.services import cancel_movement, complete_movement, save_plan
+from apps.items.models import Item, Room
+from apps.movements.models import Movement
+from apps.movements.services import (
+    cancel_movement,
+    complete_movement,
+    save_plan,
+)
 
 pytestmark = pytest.mark.django_db
 
