@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}{{ room.name }}{% endblock %}
+{% block content %}<a href="{% url 'homepage:rooms' %}">← Помещения</a>
+<h1>{{ room.name }}</h1><p>{{ room.description|default:'Описание пока не добавлено.' }}</p>
+<div class="inventory-grid">{% for item in items %}{% include 'items/includes/item_card.html' with item=item only %}{% empty %}<p>Инвентаря нет.</p>{% endfor %}</div>
+{% endblock %}

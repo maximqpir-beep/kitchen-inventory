@@ -1,5 +1,6 @@
 """Обзор, помещения и статистика через ORM."""
-from django.shortcuts import render
+
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_safe
 
 from items.models import Room
@@ -9,10 +10,15 @@ from kitchen_site.parameters import integer
 
 @require_safe
 def index(request):
-    return render(request, "homepage/index.html", {
-        "stats": orm.totals(), "active": "home",
-        "expensive": orm.item_list().order_by("-cost", "pk")[:3],
-    })
+    return render(
+        request,
+        "homepage/index.html",
+        {
+            "stats": orm.totals(),
+            "active": "home",
+            "expensive": orm.item_list().order_by("-cost", "pk")[:3],
+        },
+    )
 
 
 @require_safe
@@ -28,9 +34,14 @@ def statistics(request):
 
 @require_safe
 def rooms_list(request):
-    return render(request, "homepage/rooms.html", {
-        "rooms": Room.objects.all(), "active": "rooms",
-    })
+    return render(
+        request,
+        "homepage/rooms.html",
+        {
+            "rooms": Room.objects.all(),
+            "active": "rooms",
+        },
+    )
 
 
 def page_not_found(request, exception):
@@ -39,3 +50,22 @@ def page_not_found(request, exception):
 
 def data_unavailable(request):
     return render(request, "503.html", status=503)
+
+
+@require_safe
+def room_detail(request, slug):
+    room = get_object_or_404(
+        Room.objects.prefetch_related(
+            "items__category", "items__condition", "items__room"
+        ),
+        slug=slug,
+    )
+    return render(
+        request,
+        "homepage/room_detail.html",
+        {
+            "room": room,
+            "items": room.items.all(),
+            "active": "rooms",
+        },
+    )

@@ -9,7 +9,7 @@
     <div><span>Исправных предметов</span><strong>{{ stats.usable }}</strong></div>
     <div><span>Общая стоимость</span><strong>{{ stats.total|money }} ₽</strong></div>
   </section>
-  <p>Перемещений: {{ moves.total }}. Выполнено: {{ moves.done }}. Отменено: {{ moves.cancelled }}.</p>
+  <p>Перемещений: {{ moves.total }}. Запланировано: {{ moves.planned }}. Выполнено: {{ moves.done }}. Отменено: {{ moves.cancelled }}.</p>
   <p>Цена за штуку: минимум {% if prices.minimum != None %}{{ prices.minimum|money }} ₽{% else %}нет данных{% endif %}, максимум {% if prices.maximum != None %}{{ prices.maximum|money }} ₽{% else %}нет данных{% endif %}, средняя {% if prices.average != None %}{{ prices.average|money }} ₽{% else %}нет данных{% endif %}.</p>
   <h2>По категориям</h2>
   {% include 'homepage/includes/summary_table.html' with entries=categories heading='Категория' only %}

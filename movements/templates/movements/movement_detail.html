@@ -14,8 +14,9 @@
       <span aria-hidden="true">→</span>
       <div><span>Куда</span><strong>{{ movement.target_name }}</strong></div>
     </div>
-    {% if movement.cancelled %}
+    {% if movement.status == 'CANCELLED' %}
       <p>Запись отменена и не участвует в текущей цепочке перемещений.</p>
+    {% elif movement.status == 'PLANNED' %}<p>Запланировано на {{ movement.scheduled_for|date:'d.m.Y' }}.</p>
     {% else %}
       <p>Перемещение выполнено.</p>
     {% endif %}

@@ -7,7 +7,7 @@
   <form class="search-bar" method="get" action="{% url 'movements:list' %}">
     <div class="filter-row">
       <label>Дата перемещения<input type="date" name="date" value="{{ date }}" class="form-control"></label>
-      <label>Статус<select name="status" class="form-select"><option value="-1"{% if status == -1 %} selected{% endif %}>Все записи</option><option value="0"{% if status == 0 %} selected{% endif %}>Выполненные</option><option value="1"{% if status == 1 %} selected{% endif %}>Отмененные</option></select></label>
+      <label>Статус<select name="status" class="form-select"><option value="-1"{% if status == -1 %} selected{% endif %}>Все записи</option><option value="0"{% if status == 0 %} selected{% endif %}>Выполненные</option><option value="1"{% if status == 1 %} selected{% endif %}>Отмененные</option><option value="2"{% if status == 2 %} selected{% endif %}>Запланированные</option></select></label>
       <button type="submit" class="btn btn-primary">Показать</button>
       <label>Поиск<input name="q" value="{{ query }}" class="form-control"></label>
       <label>Порядок<select name="sort" class="form-select"><option value="newest"{% if sort == 'newest' %} selected{% endif %}>Новые первыми</option><option value="oldest"{% if sort == 'oldest' %} selected{% endif %}>Старые первыми</option><option value="item"{% if sort == 'item' %} selected{% endif %}>По предмету</option></select></label>

@@ -12,15 +12,19 @@ from kitchen_site.parameters import integer, selected_date
 def movement_list(request):
     try:
         date = selected_date(request)
-        status = integer(request, "status", default=-1, minimum=-1, maximum=1)
+        status = integer(request, "status", default=-1, minimum=-1, maximum=2)
         integer(request, "page", default=1, minimum=1)
     except ValueError as error:
         return render(request, "400.html", {"error": str(error)}, status=400)
     entries = orm.movement_list()
     if date:
-        entries = entries.filter(created_at__date=date)
-    if status != -1:
-        entries = entries.filter(cancelled=bool(status))
+        entries = entries.for_date(date)
+    if status == 0:
+        entries = entries.completed()
+    elif status == 1:
+        entries = entries.cancelled()
+    elif status == 2:
+        entries = entries.active()
     query = request.GET.get("q", "").strip()[:200]
     if query:
         entries = entries.filter(

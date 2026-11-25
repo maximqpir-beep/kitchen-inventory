@@ -13,7 +13,7 @@ def item_list():
 
 
 def movement_list():
-    return Movement.objects.select_related("item", "source", "target")
+    return Movement.objects.with_related()
 
 
 def totals():
@@ -47,8 +47,9 @@ def statistics(threshold):
         "stats": totals(),
         "moves": Movement.objects.aggregate(
             total=Count("pk"),
-            done=Count("pk", filter=Q(cancelled=False)),
-            cancelled=Count("pk", filter=Q(cancelled=True)),
+            done=Count("pk", filter=Q(status="COMPLETED")),
+            planned=Count("pk", filter=Q(status="PLANNED")),
+            cancelled=Count("pk", filter=Q(status="CANCELLED")),
         ),
         "prices": Item.objects.aggregate(
             minimum=Min("unit_price"),

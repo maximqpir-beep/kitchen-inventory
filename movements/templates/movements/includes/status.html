@@ -1,5 +1,3 @@
-{% if movement.cancelled %}
-  <span class="status muted">Отменено</span>
-{% else %}
-  <span class="status good">Выполнено</span>
-{% endif %}
+{% if movement.status == 'CANCELLED' %}<span class="status muted">Отменено</span>
+{% elif movement.status == 'PLANNED' %}<span class="status warn">Запланировано</span>
+{% else %}<span class="status good">Выполнено</span>{% endif %}

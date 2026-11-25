@@ -4,6 +4,9 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
 from django.urls import reverse
+from django.utils.text import slugify
+from unidecode import unidecode
+from uuid import uuid4
 
 
 class NamedModel(models.Model):
@@ -42,6 +45,23 @@ class Condition(NamedModel):
 
 
 class Room(NamedModel):
+    slug = models.SlugField(
+        "URL-идентификатор",
+        max_length=180,
+        unique=True,
+        blank=True,
+        editable=False,
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(unidecode(self.name))[:140] or "room"
+            self.slug = f"{base}-{uuid4().hex[:10]}"
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("homepage:room_detail", args=[self.slug])
+
     description = models.TextField("Описание", blank=True, default="")
 
     class Meta(NamedModel.Meta):
@@ -84,6 +104,12 @@ class Item(models.Model):
     unit_price = models.PositiveBigIntegerField(
         "Цена, коп.", validators=[MinValueValidator(1)]
     )
+    total_price = models.GeneratedField(
+        expression=F("quantity") * F("unit_price"),
+        output_field=models.BigIntegerField(),
+        db_persist=True,
+        verbose_name="Стоимость партии, коп.",
+    )
     objects = ItemQuerySet.as_manager()
 
     class Meta:
@@ -118,7 +144,7 @@ class Item(models.Model):
 
     @property
     def total(self):
-        return self.quantity * self.unit_price
+        return self.total_price
 
     @property
     def category_name(self):

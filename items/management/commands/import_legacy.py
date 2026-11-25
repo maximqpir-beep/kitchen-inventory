@@ -89,13 +89,31 @@ class Command(BaseCommand):
                     created = datetime.fromisoformat(raw["created_at"])
                     if timezone.is_naive(created):
                         created = timezone.make_aware(created)
+                    fields = {f.name for f in Movement._meta.fields}
+                    extra = (
+                        {"cancelled": bool(raw["cancelled"])}
+                        if "cancelled" in fields
+                        else {
+                            "status": (
+                                "CANCELLED"
+                                if raw["cancelled"]
+                                else "COMPLETED"
+                            ),
+                            "scheduled_for": timezone.localtime(
+                                created
+                            ).date(),
+                            "executed_at": (
+                                created if not raw["cancelled"] else None
+                            ),
+                        }
+                    )
                     Movement.objects.create(
                         pk=raw["id"],
                         item_id=raw["item_id"],
                         source_id=raw["from_room"],
                         target_id=raw["to_room"],
                         created_at=created,
-                        cancelled=bool(raw["cancelled"]),
+                        **extra,
                     )
         except (sqlite3.Error, ValueError, KeyError) as error:
             raise CommandError(str(error)) from error

@@ -6,5 +6,6 @@ app_name = "homepage"
 urlpatterns = [
     path("", views.index, name="index"),
     path("statistics/", views.statistics, name="statistics"),
+    path("rooms/<slug:slug>/", views.room_detail, name="room_detail"),
     path("rooms/", views.rooms_list, name="rooms"),
 ]
