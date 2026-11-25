@@ -1,48 +1,41 @@
-"""Обзор и статистика формируются SQL-агрегатами."""
-
-from django.http import HttpRequest, HttpResponse
+"""Обзор, помещения и статистика через ORM."""
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 
+from items.models import Room
+from kitchen_site import orm
 from kitchen_site.parameters import integer
-from kitchen_site.source import row, rows
 
 
 @require_safe
-def index(request: HttpRequest) -> HttpResponse:
+def index(request):
     return render(request, "homepage/index.html", {
-        "stats": row("inventory_totals"), "active": "home",
-        "expensive": rows("expensive_items", (3, 0)),
+        "stats": orm.totals(), "active": "home",
+        "expensive": orm.item_list().order_by("-cost", "pk")[:3],
     })
 
 
 @require_safe
-def statistics(request: HttpRequest) -> HttpResponse:
+def statistics(request):
     try:
         threshold = integer(request, "min_units", default=2)
     except ValueError as error:
         return render(request, "400.html", {"error": str(error)}, status=400)
-    return render(request, "homepage/statistics.html", {
-        "stats": row("inventory_totals"),
-        "moves": row("movement_totals"), "prices": row("price_bounds"),
-        "categories": rows("category_statistics"),
-        "rooms": rows("room_statistics"),
-        "conditions": rows("condition_statistics"),
-        "heavy_rooms": rows("heavy_rooms", (threshold,)),
-        "threshold": threshold, "active": "stats",
-    })
+    context = orm.statistics(threshold)
+    context.update(threshold=threshold, active="stats")
+    return render(request, "homepage/statistics.html", context)
 
 
 @require_safe
-def rooms_list(request: HttpRequest) -> HttpResponse:
+def rooms_list(request):
     return render(request, "homepage/rooms.html", {
-        "rooms": rows("rooms"), "active": "rooms",
+        "rooms": Room.objects.all(), "active": "rooms",
     })
 
 
-def page_not_found(request: HttpRequest, exception) -> HttpResponse:
+def page_not_found(request, exception):
     return render(request, "404.html", status=404)
 
 
-def data_unavailable(request: HttpRequest) -> HttpResponse:
+def data_unavailable(request):
     return render(request, "503.html", status=503)
